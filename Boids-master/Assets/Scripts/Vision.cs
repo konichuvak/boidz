@@ -6,7 +6,6 @@ using UnityEngine;
 public class Vision : MonoBehaviour
 {
     [SerializeField] SphereCollider visionRange;
-    [SerializeField] CapsuleCollider draftRange;
 
     Dictionary<string, GameObject> visibleObjects = new Dictionary<string, GameObject>();
 
