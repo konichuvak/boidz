@@ -28,6 +28,7 @@ TagManager:
   - food
   - pit
   - Surface
+  - Predator
   layers:
   - Default
   - TransparentFX

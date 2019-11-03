@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class Predator : MonoBehaviour
 {
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.tag == "Player")
-        {
-            Destroy(collision.gameObject);
-        }
-    }
+    // private void OnCollisionEnter(Collision collision)
+    // {
+    //     if (collision.gameObject.tag == "Player")
+    //     {
+    //         Destroy(collision.gameObject);
+    //     }
+    // }
 }

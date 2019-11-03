@@ -57,7 +57,6 @@ MonoBehaviour:
     resetOnDone: 1
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
-  Target: {fileID: 0}
   speed: 10
 --- !u!54 &2729157411603597081
 Rigidbody:
@@ -95,7 +94,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4115476135907606149}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de5bc8a678fea4b7fbc0850f07c5a70b, type: 3}
   m_Name: 

@@ -7,14 +7,16 @@ public class Boid : Agent
     private bool isSubmerged = true;
     Rigidbody rBody;
     int numBoids;
+    bool isEaten = false;
+    bool hasEaten = false;
 
     void Start()
     {
         rBody = GetComponent<Rigidbody>();
-        numBoids = GameObject.FindGameObjectsWithTag("Player").Length;
+        numBoids = GameObject.FindGameObjectsWithTag("Player").Length + GameObject.FindGameObjectsWithTag("Predator").Length;
     }
 
-    public Transform Target;
+    // public Transform Target;
     public override void AgentReset()
     {
         if (this.transform.position.y < 0)
@@ -25,20 +27,22 @@ public class Boid : Agent
             this.transform.position = new Vector3(0, 0.5f, 0);
         }
 
-        // Move the target to a new spot
-        Target.position = new Vector3(Random.value * 8 - 4,
-                                      0.5f,
-                                      Random.value * 8 - 4);
+        // // Move the target to a new spot
+        // Target.position = new Vector3(Random.value * 8 - 4,
+        //                               0.5f,
+        //                               Random.value * 8 - 4);
     }
 
     private bool isPredator(Rigidbody obj){
-        return obj.GetType() != typeof(Boid);
+        return obj.gameObject.tag == "Predator";
     }
+
 
     public override void CollectObservations()
     {
         // Target and Agent positions
         Dictionary<string, GameObject> visibleObjects;
+        // print(GetComponent<Vision>);
         visibleObjects = GetComponent<Vision>().ReturnVisionVector();
 
         AddVectorObs(this.transform.position);
@@ -58,8 +62,18 @@ public class Boid : Agent
 
     }
     private void OnCollisionEnter(Collision other){
-        this.rBody.velocity = Vector3.zero;
+        if (other.gameObject.tag == "Predator") {
+            if (this.gameObject.tag != "Predator") {
+                isEaten = true;
+            }
 
+        }
+        else {
+            if (this.gameObject.tag == "Predator") {
+                hasEaten = true;
+            }
+            this.rBody.velocity = Vector3.zero;
+        }
     }
 
     private void OnTriggerEnter(Collider other) {
@@ -91,25 +105,16 @@ public class Boid : Agent
         if(isSubmerged) rBody.AddForce(controlSignal * speed);
         else rBody.AddForce(new Vector3(0, 9.8f, 0));
 
-
-        // Rewards
-        bool isEaten = false;
-        // Dictionary<string, GameObject> neighbours = 
-        
-
-
-        // // Reached target
-        // if (distanceToTarget < 1.42f)
-        // {
-        //     SetReward(-1.0f);
-        //     // Done();
-        // }
-
-        // Fell off platform
-        // if (this.transform.position.y < 0)
-        // {
-        //     Done();
-        // }
+        // Reached target
+        if (isEaten)
+        {
+            SetReward(-1.0f);
+            isEaten = false;
+        }
+        else if (hasEaten){
+            SetReward(1.0f);
+            hasEaten = false;
+        }
 
     }
 }

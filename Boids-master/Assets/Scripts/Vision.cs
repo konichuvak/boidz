@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using MLAgents;
+// using MLAgents;
 
 public class Vision : MonoBehaviour
 {
@@ -18,10 +18,10 @@ public class Vision : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        print("does it trigger");
-        if (!visibleObjects.ContainsKey(other.gameObject.name) && other.tag == "Player") {
-            print("here");
-            // visibleObjects.Add(other.gameObject.name, other.gameObject);
+        // print("does it trigger")
+        if (!visibleObjects.ContainsKey(other.gameObject.name) && (other.tag == "Player" || other.tag == "Predator")) {
+            // print("here");
+            visibleObjects.Add(other.gameObject.name, other.gameObject);
         }
     }
 

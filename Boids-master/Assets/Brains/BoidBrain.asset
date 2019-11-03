@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BoidBrain
   m_EditorClassIdentifier: 
   brainParameters:
-    vectorObservationSize: 21
+    vectorObservationSize: 14
     numStackedVectorObservations: 1
     vectorActionSize: 03000000
     cameraResolutions: []
