@@ -25,7 +25,7 @@ public class Vision : MonoBehaviour
     internal void ReturnVisionVector()
     { 
         // double[] vec = new double[]; 
-        print(GameObject.FindObjectsOfType(typeof(Agent))); //returns Object[]
+        print(GameObject.FindObjectsOfType(typeof(Boid))); //returns Object[]
         foreach(KeyValuePair<string, GameObject> entry in visibleObjects){
             // print(.GetType().GetProperties());
             // print(entry.Key);
