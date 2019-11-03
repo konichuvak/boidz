@@ -9,6 +9,7 @@ public class Boid : Agent
     void Start()
     {
         rBody = GetComponent<Rigidbody>();
+        rBody.constraints = RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezeRotationX;
     }
 
     public Transform Target;
