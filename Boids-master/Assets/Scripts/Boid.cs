@@ -51,8 +51,7 @@ public class Boid : Agent
     private void OnTriggerEnter(Collider other) {
         if(other.gameObject.tag == "Surface") {
             GetComponent<Rigidbody>().drag = 0;
-
-            //GetComponent<Rigidbody>().useGravity = true;
+            Debug.Log("Entered");
             isSubmerged = false;
         }
     }
@@ -60,8 +59,7 @@ public class Boid : Agent
     private void OnTriggerExit(Collider other) {
         if(other.gameObject.tag == "Surface") {
             GetComponent<Rigidbody>().drag = 1;
-
-            //GetComponent<Rigidbody>().useGravity = false;
+            Debug.Log("Exited");
             isSubmerged = true;
         }
     }
@@ -75,7 +73,7 @@ public class Boid : Agent
         controlSignal.z = vectorAction[1];
         controlSignal.y = vectorAction[2];
         if(isSubmerged) rBody.AddForce(controlSignal * speed);
-        else rBody.AddForce(new Vector3(0, 9.8f, 0));
+        else rBody.AddForce(new Vector3(0, -9.8f, 0));
 
 
         // Rewards

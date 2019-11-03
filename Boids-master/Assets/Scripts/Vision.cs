@@ -25,12 +25,12 @@ public class Vision : MonoBehaviour
     internal void ReturnVisionVector()
     { 
         // double[] vec = new double[]; 
-        print(GameObject.FindObjectsOfType(typeof(Boid))); //returns Object[]
+        //print(GameObject.FindObjectsOfType(typeof(Boid))); //returns Object[]
         foreach(KeyValuePair<string, GameObject> entry in visibleObjects){
             // print(.GetType().GetProperties());
             // print(entry.Key);
-            print(entry.Value.GetComponent<Rigidbody>().position);
-            print(entry.Value.GetComponent<Rigidbody>().velocity);
+            //print(entry.Value.GetComponent<Rigidbody>().position);
+            //print(entry.Value.GetComponent<Rigidbody>().velocity);
         }
         // throw new NotImplementedException();
     }
