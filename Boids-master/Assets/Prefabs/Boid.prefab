@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2729157411603597081}
   - component: {fileID: 8549855794191144158}
   - component: {fileID: 1422823156927792734}
+  - component: {fileID: 5586672463608584446}
   m_Layer: 8
   m_Name: Boid
   m_TagString: Player
@@ -96,6 +97,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   draft: {fileID: 4617633120620222197, guid: 4c0b7ec18730f4a989b934d2c7e859bd, type: 3}
+--- !u!136 &5586672463608584446
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4115476135907606149}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.2
+  m_Height: 0.5
+  m_Direction: 2
+  m_Center: {x: 0, y: 0, z: 0.03}
 --- !u!1 &8171616104171298396
 GameObject:
   m_ObjectHideFlags: 0

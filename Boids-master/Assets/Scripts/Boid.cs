@@ -92,10 +92,7 @@ public class Boid : MonoBehaviour {
 
     bool IsHeadingForCollision () {
         RaycastHit hit;
-        if (Physics.SphereCast (position, settings.boundsRadius, forward, out hit, settings.collisionAvoidDst, settings.obstacleMask)) {
-            return true;
-        } else { }
-        return false;
+        return Physics.SphereCast(position, settings.boundsRadius, forward, out hit, settings.collisionAvoidDst, settings.obstacleMask);
     }
 
     Vector3 ObstacleRays () {

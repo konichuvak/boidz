@@ -39,4 +39,17 @@ public class Draft : MonoBehaviour
         lastPos = transform.position;
         lastRot = transform.rotation;
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        float angle = Vector3.Angle(other.transform.forward, transform.forward);
+        if (Mathf.Abs(angle) < 90)
+        {
+            float cosAngle = Mathf.Cos(angle);
+            //todo pass angle to rl so that it feels pull on one side
+            Rigidbody rbBoid = GetComponent<Rigidbody>();
+            if (rbBoid.drag > 1 - cosAngle)
+                rbBoid.drag = 1 - cosAngle;
+        }
+    }
 }
