@@ -32,9 +32,9 @@ public class Boid : Agent
     {
         // Target and Agent positions
         // vec = GetComponent<Vision>().ReturnVisionVector();
-        print(Target.position);
-        print(this.transform.position);
-        print(rBody.velocity);
+        // print(Target.position);
+        // print(this.transform.position);
+        // print(rBody.velocity);
 
         AddVectorObs(Target.position);
         AddVectorObs(this.transform.position);
@@ -79,21 +79,23 @@ public class Boid : Agent
 
 
         // Rewards
-        float distanceToTarget = Vector3.Distance(this.transform.position,
-                                                  Target.position);
+        bool isEaten = false;
+        // Dictionary<string, GameObject> neighbours = 
+        GetComponent<Vision>().ReturnVisionVector();
 
-        // Reached target
-        if (distanceToTarget < 1.42f)
-        {
-            SetReward(1.0f);
-            Done();
-        }
+
+        // // Reached target
+        // if (distanceToTarget < 1.42f)
+        // {
+        //     SetReward(-1.0f);
+        //     // Done();
+        // }
 
         // Fell off platform
-        if (this.transform.position.y < 0)
-        {
-            Done();
-        }
+        // if (this.transform.position.y < 0)
+        // {
+        //     Done();
+        // }
 
     }
 }

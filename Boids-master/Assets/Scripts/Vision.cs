@@ -2,12 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MLAgents;
 
 public class Vision : MonoBehaviour
 {
     [SerializeField] SphereCollider visionRange;
 
     Dictionary<string, GameObject> visibleObjects = new Dictionary<string, GameObject>();
+
 
     private void OnTriggerEnter(Collider other)
     {
@@ -22,7 +24,14 @@ public class Vision : MonoBehaviour
 
     internal void ReturnVisionVector()
     { 
-        print("fukkkk");
+        // double[] vec = new double[]; 
+        print(GameObject.FindObjectsOfType(typeof(Agent))); //returns Object[]
+        foreach(KeyValuePair<string, GameObject> entry in visibleObjects){
+            // print(.GetType().GetProperties());
+            // print(entry.Key);
+            print(entry.Value.GetComponent<Rigidbody>().position);
+            print(entry.Value.GetComponent<Rigidbody>().velocity);
+        }
         // throw new NotImplementedException();
     }
 }
