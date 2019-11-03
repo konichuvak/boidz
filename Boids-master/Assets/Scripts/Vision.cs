@@ -21,8 +21,9 @@ public class Vision : MonoBehaviour
     }
 
     internal void ReturnVisionVector()
-    {
-        throw new NotImplementedException();
+    { 
+        print("fukkkk");
+        // throw new NotImplementedException();
     }
 }
 

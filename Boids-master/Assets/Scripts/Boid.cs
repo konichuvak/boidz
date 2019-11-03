@@ -4,6 +4,7 @@ using MLAgents;
 
 public class Boid : Agent
 {
+    private bool isSubmerged = true;
     Rigidbody rBody;
     void Start()
     {
@@ -26,17 +27,43 @@ public class Boid : Agent
                                       0.5f,
                                       Random.value * 8 - 4);
     }
-    //GetComponent<Vision>().ReturnVisionVector();
 
     public override void CollectObservations()
     {
         // Target and Agent positions
+        // vec = GetComponent<Vision>().ReturnVisionVector();
+        print(Target.position);
+        print(this.transform.position);
+        print(rBody.velocity);
+
         AddVectorObs(Target.position);
         AddVectorObs(this.transform.position);
 
         // Agent velocity
         AddVectorObs(rBody.velocity.x);
         AddVectorObs(rBody.velocity.z);
+    }
+    private void OnCollisionEnter(Collision other){
+        this.rBody.velocity = Vector3.zero;
+
+    }
+
+    private void OnTriggerEnter(Collider other) {
+        if(other.gameObject.tag == "Surface") {
+            GetComponent<Rigidbody>().drag = 0;
+
+            //GetComponent<Rigidbody>().useGravity = true;
+            isSubmerged = false;
+        }
+    }
+
+    private void OnTriggerExit(Collider other) {
+        if(other.gameObject.tag == "Surface") {
+            GetComponent<Rigidbody>().drag = 1;
+
+            //GetComponent<Rigidbody>().useGravity = false;
+            isSubmerged = true;
+        }
     }
 
     public float speed = 10;
@@ -46,7 +73,10 @@ public class Boid : Agent
         Vector3 controlSignal = Vector3.zero;
         controlSignal.x = vectorAction[0];
         controlSignal.z = vectorAction[1];
-        rBody.AddForce(controlSignal * speed);
+        controlSignal.y = vectorAction[2];
+        if(isSubmerged) rBody.AddForce(controlSignal * speed);
+        else rBody.AddForce(new Vector3(0, 9.8f, 0));
+
 
         // Rewards
         float distanceToTarget = Vector3.Distance(this.transform.position,
