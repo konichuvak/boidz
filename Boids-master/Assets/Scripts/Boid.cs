@@ -6,9 +6,12 @@ public class Boid : Agent
 {
     private bool isSubmerged = true;
     Rigidbody rBody;
+    int numBoids;
+
     void Start()
     {
         rBody = GetComponent<Rigidbody>();
+        numBoids = GameObject.FindGameObjectsWithTag("Player").Length;
     }
 
     public Transform Target;
@@ -28,20 +31,31 @@ public class Boid : Agent
                                       Random.value * 8 - 4);
     }
 
+    private bool isPredator(Rigidbody obj){
+        return obj.GetType() != typeof(Boid);
+    }
+
     public override void CollectObservations()
     {
         // Target and Agent positions
-        // vec = GetComponent<Vision>().ReturnVisionVector();
-        // print(Target.position);
-        // print(this.transform.position);
-        // print(rBody.velocity);
+        Dictionary<string, GameObject> visibleObjects;
+        visibleObjects = GetComponent<Vision>().ReturnVisionVector();
 
-        AddVectorObs(Target.position);
         AddVectorObs(this.transform.position);
+        AddVectorObs(rBody.velocity);
+        AddVectorObs(0);
 
-        // Agent velocity
-        AddVectorObs(rBody.velocity.x);
-        AddVectorObs(rBody.velocity.z);
+        
+        foreach(KeyValuePair<string, GameObject> entry in visibleObjects){
+            AddVectorObs(entry.Value.GetComponent<Rigidbody>().position); 
+            AddVectorObs(entry.Value.GetComponent<Rigidbody>().velocity);
+            AddVectorObs(isPredator(entry.Value.GetComponent<Rigidbody>()) ? 1 : 2); 
+        }
+
+        int len = 7 * (numBoids - visibleObjects.Count - 1);
+        AddVectorObs(new float[len]);
+        // AddVectorObs(new float[numBoids * 7]);
+
     }
     private void OnCollisionEnter(Collision other){
         this.rBody.velocity = Vector3.zero;
@@ -81,7 +95,7 @@ public class Boid : Agent
         // Rewards
         bool isEaten = false;
         // Dictionary<string, GameObject> neighbours = 
-        GetComponent<Vision>().ReturnVisionVector();
+        
 
 
         // // Reached target

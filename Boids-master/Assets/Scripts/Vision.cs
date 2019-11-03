@@ -9,29 +9,52 @@ public class Vision : MonoBehaviour
     [SerializeField] SphereCollider visionRange;
 
     Dictionary<string, GameObject> visibleObjects = new Dictionary<string, GameObject>();
+    // int numBoids;
 
+    // void Awake(){
+    //     numBoids = GameObject.FindGameObjectsWithTag("Player").Length;
+    //     print(numBoids);
+    // }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!visibleObjects.ContainsKey(other.gameObject.name) && other.tag == "Player")
-            visibleObjects.Add(other.gameObject.name, other.gameObject);
+        print("does it trigger");
+        if (!visibleObjects.ContainsKey(other.gameObject.name) && other.tag == "Player") {
+            print("here");
+            // visibleObjects.Add(other.gameObject.name, other.gameObject);
+        }
     }
 
-    private void OnTrigerExit(Collider other)
+    private void OnTriggerExit(Collider other)
     {
         visibleObjects.Remove(other.gameObject.name);
     }
 
-    internal void ReturnVisionVector()
+    internal Dictionary<string, GameObject> ReturnVisionVector()
     { 
-        // double[] vec = new double[]; 
-        print(GameObject.FindObjectsOfType(typeof(Boid))); //returns Object[]
-        foreach(KeyValuePair<string, GameObject> entry in visibleObjects){
-            // print(.GetType().GetProperties());
-            // print(entry.Key);
-            print(entry.Value.GetComponent<Rigidbody>().position);
-            print(entry.Value.GetComponent<Rigidbody>().velocity);
-        }
+        return visibleObjects;
+        // double[] v = new double[numBoids * 7]; 
+        // int c;
+        // foreach(KeyValuePair<string, GameObject> entry in visibleObjects){
+        //     // print(.GetType().GetProperties());
+        //     // print(entry.Key);
+        //     Vector3 pos = entry.Value.GetComponent<Rigidbody>().position;            
+        //     Vector3 vel = entry.Value.GetComponent<Rigidbody>().velocity;
+        //     v[c] = pos[0];
+        //     v[c+1] = pos[1];
+        //     v[c+2] = pos[2];
+
+
+        //     v[c+3] = vel[0];
+        //     v[c+4] = vel[1];
+        //     v[c+5] = vel[2];
+
+        //     v[c+6] = GetBoidType(entry.Value.GetComponent<Rigidbody>());            
+        //     print(v);
+        //     c += 7;
+
+        //     // print(typeof(entry.Value.GetComponent<Rigidbody>().position));
+        // }
         // throw new NotImplementedException();
     }
 }
