@@ -9,6 +9,7 @@ public class Boid : Agent
     int numBoids;
     bool isEaten = false;
     bool hasEaten = false;
+    public Transform Target;
 
     void Start()
     {
@@ -19,6 +20,7 @@ public class Boid : Agent
     // public Transform Target;
     public override void AgentReset()
     {
+
         if (this.transform.position.y < 0)
         {
             // If the Agent fell, zero its momentum
@@ -94,27 +96,37 @@ public class Boid : Agent
         }
     }
 
-    public float speed = 10;
+    public float speed = 1;
     public override void AgentAction(float[] vectorAction, string textAction)
     {
-        // Actions, size = 2
+
         Vector3 controlSignal = Vector3.zero;
         controlSignal.x = vectorAction[0];
         controlSignal.z = vectorAction[1];
         controlSignal.y = vectorAction[2];
-        if(isSubmerged) rBody.AddForce(controlSignal * speed);
+        if(isSubmerged) rBody.AddForce(controlSignal * speed, ForceMode.Impulse);
         else rBody.AddForce(new Vector3(0, 9.8f, 0));
 
+
+        // Decrease the excessive spinning
+        rBody.velocity = rBody.velocity * 0.9f;
+        rBody.angularVelocity = rBody.angularVelocity * 0.9f;
+
         // Reached target
-        if (isEaten)
-        {
-            SetReward(-1.0f);
-            isEaten = false;
-        }
-        else if (hasEaten){
-            SetReward(1.0f);
-            hasEaten = false;
-        }
+        float distanceToTarget = Vector3.Distance(this.transform.position, Target.position);
+        SetReward(-1.0f/distanceToTarget);
+
+
+        // // Reached target
+        // if (isEaten)
+        // {
+        //     SetReward(-1.0f);
+        //     isEaten = false;
+        // }
+        // else if (hasEaten){
+        //     SetReward(1.0f);
+        //     hasEaten = false;
+        // }
 
     }
 }
