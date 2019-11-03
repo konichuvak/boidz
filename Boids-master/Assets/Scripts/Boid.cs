@@ -1,117 +1,69 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
+using MLAgents;
 
-public class Boid : MonoBehaviour {
-    BoidSettings settings;
-
-    // State
-    [HideInInspector]
-    public Vector3 position;
-    [HideInInspector]
-    public Vector3 forward;
-    Vector3 velocity;
-
-    // To update:
-    Vector3 acceleration;
-    [HideInInspector]
-    public Vector3 avgFlockHeading;
-    [HideInInspector]
-    public Vector3 avgAvoidanceHeading;
-    [HideInInspector]
-    public Vector3 centreOfFlockmates;
-    [HideInInspector]
-    public int numPerceivedFlockmates;
-
-    // Cached
-    Material material;
-    Transform cachedTransform;
-    Transform target;
-
-    void Awake () {
-        material = transform.GetComponentInChildren<MeshRenderer> ().material;
-        cachedTransform = transform;
+public class Boid : Agent
+{
+    Rigidbody rBody;
+    void Start()
+    {
+        rBody = GetComponent<Rigidbody>();
     }
 
-    public void Initialize (BoidSettings settings, Transform target) {
-        this.target = target;
-        this.settings = settings;
-
-        position = cachedTransform.position;
-        forward = cachedTransform.forward;
-
-        float startSpeed = (settings.minSpeed + settings.maxSpeed) / 2;
-        velocity = transform.forward * startSpeed;
-    }
-
-    public void SetColour (Color col) {
-        if (material != null) {
-            material.color = col;
-        }
-    }
-
-    public void UpdateBoid () {
-        Vector3 acceleration = Vector3.zero;
-
-        if (target != null) {
-            Vector3 offsetToTarget = (target.position - position);
-            acceleration = SteerTowards (offsetToTarget) * settings.targetWeight;
+    public Transform Target;
+    public override void AgentReset()
+    {
+        if (this.transform.position.y < 0)
+        {
+            // If the Agent fell, zero its momentum
+            this.rBody.angularVelocity = Vector3.zero;
+            this.rBody.velocity = Vector3.zero;
+            this.transform.position = new Vector3(0, 0.5f, 0);
         }
 
-        if (numPerceivedFlockmates != 0) {
-            centreOfFlockmates /= numPerceivedFlockmates;
+        // Move the target to a new spot
+        Target.position = new Vector3(Random.value * 8 - 4,
+                                      0.5f,
+                                      Random.value * 8 - 4);
+    }
+    //GetComponent<Vision>().ReturnVisionVector();
 
-            Vector3 offsetToFlockmatesCentre = (centreOfFlockmates - position);
+    public override void CollectObservations()
+    {
+        // Target and Agent positions
+        AddVectorObs(Target.position);
+        AddVectorObs(this.transform.position);
 
-            var alignmentForce = SteerTowards (avgFlockHeading) * settings.alignWeight;
-            var cohesionForce = SteerTowards (offsetToFlockmatesCentre) * settings.cohesionWeight;
-            var seperationForce = SteerTowards (avgAvoidanceHeading) * settings.seperateWeight;
+        // Agent velocity
+        AddVectorObs(rBody.velocity.x);
+        AddVectorObs(rBody.velocity.z);
+    }
 
-            acceleration += alignmentForce;
-            acceleration += cohesionForce;
-            acceleration += seperationForce;
+    public float speed = 10;
+    public override void AgentAction(float[] vectorAction, string textAction)
+    {
+        // Actions, size = 2
+        Vector3 controlSignal = Vector3.zero;
+        controlSignal.x = vectorAction[0];
+        controlSignal.z = vectorAction[1];
+        rBody.AddForce(controlSignal * speed);
+
+        // Rewards
+        float distanceToTarget = Vector3.Distance(this.transform.position,
+                                                  Target.position);
+
+        // Reached target
+        if (distanceToTarget < 1.42f)
+        {
+            SetReward(1.0f);
+            Done();
         }
 
-        if (IsHeadingForCollision ()) {
-            Vector3 collisionAvoidDir = ObstacleRays ();
-            Vector3 collisionAvoidForce = SteerTowards (collisionAvoidDir) * settings.avoidCollisionWeight;
-            acceleration += collisionAvoidForce;
+        // Fell off platform
+        if (this.transform.position.y < 0)
+        {
+            Done();
         }
 
-        velocity += acceleration * Time.deltaTime;
-        float speed = velocity.magnitude;
-        Vector3 dir = velocity / speed;
-        speed = Mathf.Clamp (speed, settings.minSpeed, settings.maxSpeed);
-        velocity = dir * speed;
-
-        cachedTransform.position += velocity * Time.deltaTime;
-        cachedTransform.forward = dir;
-        position = cachedTransform.position;
-        forward = dir;
     }
-
-    bool IsHeadingForCollision () {
-        RaycastHit hit;
-        return Physics.SphereCast(position, settings.boundsRadius, forward, out hit, settings.collisionAvoidDst, settings.obstacleMask);
-    }
-
-    Vector3 ObstacleRays () {
-        Vector3[] rayDirections = BoidHelper.directions;
-
-        for (int i = 0; i < rayDirections.Length; i++) {
-            Vector3 dir = cachedTransform.TransformDirection (rayDirections[i]);
-            Ray ray = new Ray (position, dir);
-            if (!Physics.SphereCast (ray, settings.boundsRadius, settings.collisionAvoidDst, settings.obstacleMask)) {
-                return dir;
-            }
-        }
-
-        return forward;
-    }
-
-    Vector3 SteerTowards (Vector3 vector) {
-        Vector3 v = vector.normalized * settings.maxSpeed - velocity;
-        return Vector3.ClampMagnitude (v, settings.maxSteerForce);
-    }
-
 }

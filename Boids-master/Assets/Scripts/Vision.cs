@@ -19,4 +19,13 @@ public class Vision : MonoBehaviour
     {
         visibleObjects.Remove(other.gameObject.name);
     }
+
+    internal void ReturnVisionVector()
+    {
+        throw new NotImplementedException();
+    }
 }
+
+//0-self, 1-other boid, 2-predator, -1 none
+//Array pos/velocity/type
+//array of size 9
